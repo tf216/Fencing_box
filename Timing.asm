@@ -1,8 +1,5 @@
-
-
-
     #include p18f87k22.inc
-    global  ms_delay
+    global  ms_delay, delay_x4us
 
 acs0    udata_acs   ; named variables in access ram
 delay_cnt_l   res 1   ; reserve 1 byte for variable LCD_cnt_l
