@@ -63,23 +63,19 @@ start
     movwf   score_right_count
     call    time_loop
     ;call    write_score
-    
-    goto    score
+    ;call    LCD_write
+    ;goto    score
+    ;goto    $
    
 
 time_loop
     movf    time_min, W
-    call    Clock_write
-    movlw   0x3A
-    call    Clock_write
-    movf    time_10sec, W
-    call    Clock_write
-    movf    time_sec, W
-    call    Clock_write
+    call    LCD_write
+
     
     
     
-    call    write_score
+;    call    write_score
 ;    movlw   b'00000110'
 ;    call    LCD_Send_Byte_I
 ;    movlW   0x01	
@@ -90,7 +86,7 @@ time_loop
     call    ms_delay
     movlw   0xFF
     ;call    ms_delay
-    call    LCD_clear
+    ;call    LCD_clear
     
     movlw   0x01
     subwf   time_sec
@@ -162,8 +158,7 @@ right_zero
 
     
 write_score
-    call    LCD_clear
-    
+    ;call    LCD_clear
     movf    score_left, W
     call    LCD_Send_Byte_D
     movlw   0x2D
@@ -174,38 +169,29 @@ write_score
     call    ms_delay
     return
     
-    
-    
-    
-    
+  
 Clock_write
-;    lfsr	FSR0, time_sec	; Load FSR0 with address in RAM
-;    movlw	0xFF
-;    movwf	delay_count
-;    movlw	upper(time_sec)	; address of data in PM
-;    movwf	TBLPTRU		; load upper bits to TBLPTRU
-;    movlw	high(myTable)	; address of data in PM
-;    movwf	TBLPTRH		; load high byte to TBLPTRH
-;    movlw	low(myTable)	; address of data in PM
-;    movwf	TBLPTRL		; load low byte to TBLPTRL
-;    movlw	0x02		; bytes to read
-;    movwf 	counter		; our counter register
-;loop
-;    tblrd*+			; one byte from PM to TABLAT, increment TBLPRT
-;    movff	TABLAT, POSTINC0; move data from TABLAT to (FSR0), inc FSR0	
-;    decfsz	counter		; count down to zero
-;    bra	loop		; keep going until finished
-;    
-    
-
-;    
-
-    
-
     call	LCD_Send_Byte_D
     movlw	0x01	
     call	ms_delay
     
     return
     
+LCD_write
+    call    LCD_clear
+    movf    time_min,W
+    call    Clock_write
+    movlw   0x3A
+    call    Clock_write
+    movf    time_10sec,W
+    call    Clock_write
+    movf    time_sec,W
+    call    Clock_write
+    
+    
+    movlw   .168
+    call    LCD_Send_Byte_I
+    movlw   0x01	
+    call    ms_delay
+    call    write_score
     end
