@@ -1,8 +1,8 @@
     #include p18f87k22.inc
     
-    global interupt_setup
-    
-    extern  score
+     global interupt_setup
+   
+     extern  score,ms_delay
     
     acs0    udata_acs
     hit	    res 1
@@ -12,10 +12,13 @@
 hit_int	code	0x0008
 	btfsc	hit,0
 	retfie	1
-	btfss	INTCON, RB4	;check if it was an interrupt caused by PORTB
+	btfss	INTCON, RBIE	;check if it was an interrupt caused by PORTB
+	retfie	1
+	btfsc	PORTB, 4
 	call	hit_left		;returns to where the interrupt has been called from
-	btfss	INTCON, RB5
-	call	hit_right	
+	btfss	PORTB, 5
+	call	hit_right
+	btfsc	INTCON,RBIE
 	call	score		;call the scoring systemn and stop the time	
 	bcf	INTCON, RBIF	;Clear flag bit
 	retfie	1		;returns to where the interrupt has been called from
@@ -52,7 +55,22 @@ lights
 	bsf	PORTG,0
 	btfsc	hit,2
 	bsf	PORTG,7
-	
+	movlw	0xFF
+	call	ms_delay
+	movlw	0xFF
+	call	ms_delay
+	movlw	0xFF
+	call	ms_delay
+	movlw	0xFF
+	call	ms_delay
+	movlw	0xFF
+	call	ms_delay
+	movlw	0xFF
+	call	ms_delay
+	movlw	0x00
+	movwf	hit
+	movwf	PORTG
+	return
 	
 
 	
