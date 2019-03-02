@@ -1,7 +1,7 @@
 #include p18f87k22.inc
 
-    global  LCD_Setup, LCD_Write_Message, LCD_clear, LCD_Send_Byte_D,LCD_Send_Byte_I
-    extern  ms_delay, delay_x4us
+    global  LCD_Setup, LCD_Write_Message, LCD_clear, LCD_Send_Byte_D,LCD_Send_Byte_I, LCD_write
+    extern  ms_delay, delay_x4us, time_min, time_10sec, time_sec, Clock_write, write_score
 
 acs0    udata_acs   ; named variables in access ram
 LCD_cnt_l   res 1   ; reserve 1 byte for variable LCD_cnt_l
@@ -115,21 +115,31 @@ LCD_Enable	    ; pulse enable bit LCD_E for 500ns
 	return
     
 
+LCD_write
+    call    LCD_clear	    ;Clear the LCD
+    movf    time_min,W
+    call    Clock_write
+    movlw   0x3A
+    call    Clock_write
+    movf    time_10sec,W
+    call    Clock_write
+    movf    time_sec,W
+    call    Clock_write
+    
+    movlw   .168
+    call    LCD_Send_Byte_I
+    movlw   0x01	
+    call    ms_delay
+    call    write_score
+    return	
+	
 
 LCD_clear
-	movlw	b'00000001'
+	movlw	b'00000001'	    ;clear code
 	call	LCD_Send_Byte_I
-	movlw	0x02
+	movlw	0x02		    ;implement 2ms delay so fully cleared
 	call	ms_delay
-	
-;	movlw	.168
-;	call	LCD_Send_Byte_I
-;	movlw	0x01	
-;	call	ms_delay
 	return
-	
-
-
 	
     end
 

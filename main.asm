@@ -1,7 +1,10 @@
     #include p18f87k22.inc
-    extern  ms_delay, time_setup, time_loop
-    extern  LCD_write, LCD_Setup, LCD_Write_Message, LCD_clear, LCD_Send_Byte_D,LCD_Send_Byte_I
+    
+    ;Import all external functions needed
+    extern  time_setup, time_loop, ms_delay
+    extern  LCD_Setup
     extern  score_setup
+    extern  interupt_setup
     
     
 ;rst code    0    ; reset vector
@@ -9,33 +12,20 @@
     
 
 	
-main	code
-    org 0x0
-    goto	setup
+main	code		;point to starting point in code and setup all functions
+    org 0x0		
+    goto    setup
     org 0x100	
 
  
 setup
     call    LCD_Setup	; setup LCD
-    call    score_setup
-    call    time_setup
-    movlw   0x00
-    movwf   TRISE
-    goto    start
+    call    score_setup	; setup scoring system
+    call    time_setup	; setup timeing system
+    call    interupt_setup  ;setup the interrupt
+    clrf    TRISE	; Make PORTE write
+    bsf	    TRISE,1	;Except pin1, which resets time
+    goto    time_loop	;got to the start of the code
     
     
-start
-    call    time_loop
-    ;call    write_score
-    ;call    LCD_write
-    ;goto    score
-    ;goto    $
-   
-
-
-    
-
-
-    
-
     end
