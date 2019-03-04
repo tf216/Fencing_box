@@ -1,6 +1,6 @@
     #include p18f87k22.inc
     
-    global interupt_setup,hit_left,hit_right,hit
+    global interupt_setup,hit, hit_delay
     
      extern  score,ms_delay,delay_x4us
 
@@ -35,34 +35,24 @@ interupt_setup	    ;look at example code in presentation and can see only enable
 	bcf	TRISB,7
 	bsf	INTCON, GIE	;Enable all interrupts
 	return
-;******These lines of code are useless, but somehow the programme will not build without them******
-hit_left
-	bsf	hit,1	    ;note that left has hit
-	movlw	0xFF
-	call	ms_delay    ;delay where other fencer can hit
-	bsf	hit,0	    ;prevent other fencer's hit from registering
-	goto	lights
-hit_right
-	bsf	hit,2	    ;note that right has hit
-	bsf	hit,0	    ;prevent other fencer's hit from registering
-	goto	lights
-;******* useful code again********
-lights	
-	btfsc	hit,1
-	bsf	LATE,0
-	btfsc	hit,2
-	bsf	LATE,7
-	movlw	0xFF
+
+
+lights				;indicate which side hit
+	btfsc	hit,1		;check if right hit
+	bsf	LATE,0		;indicate if right hit
+	btfsc	hit,2		;check if left hit
+	bsf	LATE,7		;indicate if left hit
+	movlw	0xFF		;leave LED on for .5s 
 	call	ms_delay
 	movlw	0xFF
 	call	ms_delay
-	movlw	0x00
+	movlw	0x00		;turn off LED
 	movwf	hit
 	movwf	PORTE
 	return
 	
 hit_delay			;delay for maximum amount of time to make double obvious. would be .38 for real box
-	movlw	0xFF
+	movlw	.45
 	movwf	delay_cnt_ms	;store milliseconds to be delayed in delay_cnt_ms
 delay_loop1
 	movlw	.250		;1 ms delay

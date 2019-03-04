@@ -1,7 +1,7 @@
 #include p18f87k22.inc
     
    global  write_score, score_setup, score
-   extern  LCD_Send_Byte_D, ms_delay, time_loop,LCD_write,hit_left,hit_right,min_pause, time_setup
+   extern  LCD_Send_Byte_D, ms_delay, time_loop,LCD_write,min_pause, time_setup
 
 acs0    udata_acs   ; named variables in access ram
 score_left	    res 1

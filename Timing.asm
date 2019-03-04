@@ -70,7 +70,8 @@ time_setup	    ;set the initial value of the clockk to 3:00 (what it is in a fen
 	
     
 time_loop
-
+    btg	    PORTE,1	    ;tests the value of a second to calibrate it using an oscilloscope
+    
     call    LCD_write	    ;wrtie the time and score to the LCD
     
     
@@ -78,9 +79,7 @@ time_loop
     call    ms_delay	    
     movlw   0xFA	    
     call    ms_delay
-    movlw   0xFA	    
-    call    ms_delay
-    movlw   0xFA	    
+    movlw   0xE6	    
     call    ms_delay
     
     btfsc   hit,0
